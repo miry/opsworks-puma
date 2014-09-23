@@ -115,6 +115,14 @@ define :puma_config,
     variables params
   end
 
+  init_path = "/etc/init.d/#{params[:name]}"
+  service "puma_#{params[:name]}" do
+    start_command "#{init_path} start"
+    stop_command "#{init_path} stop"
+    restart_command "#{init_path} restart"
+    action :nothing
+  end
+
   if params[:logrotate]
     logrotate_app params[:name] do
       cookbook "logrotate"
