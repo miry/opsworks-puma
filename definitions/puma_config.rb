@@ -105,21 +105,10 @@ define :puma_config,
     variables params
   end
 
-  template "#{params[:name]}" do
-    source "init.d.sh.erb"
-    path "/etc/init.d/#{params[:name]}"
-    cookbook "opsworks-puma"
-    mode "0755"
-    owner params[:owner] if params[:owner]
-    group params[:group] if params[:group]
-    variables params
-  end
-
-  init_path = "/etc/init.d/#{params[:name]}"
   service "puma_#{params[:name]}" do
-    start_command "#{init_path} start"
-    stop_command "#{init_path} stop"
-    restart_command "#{init_path} restart"
+    start_command "#{params[:puma_directory]}/puma_start.sh"
+    stop_command "#{params[:puma_directory]}/puma_stop.sh"
+    restart_command "#{params[:puma_directory]}/puma_restart.sh"
     action :nothing
   end
 
